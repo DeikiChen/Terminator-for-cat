@@ -35,7 +35,7 @@ frame_count=0
 area_list=[]
 
 
-#define a function
+#舵机运行程序
 def servo_control(servo_id,angle):
     if servo_id==1:
         i=30
@@ -66,7 +66,7 @@ def relay(i):
     if i==0:
         GPIO.output(26,GPIO.LOW)
     
-#creat two thread
+#舵机运行线程
 try:
     thread.start_new_thread(servo_control,(1,90,))#0~180
     thread.start_new_thread(servo_control,(2,50,)) #50~120
@@ -84,7 +84,7 @@ while(True):
     area_list = []
 
     ret,frame=camera.read()
-    text="Unoccupied"
+
     #转成灰阶图并且对其进行高斯模糊
     gray=cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     gray=cv2.GaussianBlur(gray,(21,21),0)
@@ -124,7 +124,7 @@ while(True):
             M=cv2.moments(cnt)
             cx=int(M['m10']/M['m00'])
             cy=int(M['m01']/M['m00'])
-            #print cx,cy
+
             cv2.rectangle(frame, (cx, cy), (cx + 4, cy + 4), (0, 0, 255), 2)
             cx=int(cx/2.6)
             cy=int(cy/4+50)
@@ -138,9 +138,9 @@ while(True):
                         thread.start_new_thread(servo_control,(2,cy,))
                         thread.start_new_thread(relay,(1,))                      
                             
-                    #else :
-                        #thread.start_new_thread(relay,(0,)) 
-                       # print "Prohibiting attacks"
+                    else :
+                        thread.start_new_thread(relay,(0,))
+                        print "Prohibiting attacks"
                         
                     count=0
             
